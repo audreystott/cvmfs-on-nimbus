@@ -86,7 +86,7 @@ For the client configuration, any user on Nimbus can run the following code to a
     cd cvmfs-setup-galaxy/
     sudo ./cvmfs-galaxy-client-setup.sh 146.118.65.109
 
-    #Note that 146.118.66.104 is the IP address of the Nimbus caching-proxy instance
+    #Note that 146.118.65.109 is the IP address of the Nimbus caching-proxy instance
 
 ## Notes
 
