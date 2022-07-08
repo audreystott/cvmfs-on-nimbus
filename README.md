@@ -84,9 +84,9 @@ For the client configuration, any user on Nimbus can run the following code to a
 
     git clone https://github.com/qcif/cvmfs-setup-galaxy.git
     cd cvmfs-setup-galaxy/
-    sudo ./cvmfs-galaxy-client-setup.sh 146.118.66.104
+    sudo ./cvmfs-galaxy-client-setup.sh cvmfs-cachingproxy.pawsey.org.au
 
-    #Note that 146.118.66.104 is the IP address of the Nimbus caching-proxy instance
+    #Note that cvmfs-cachingproxy.pawsey.org.au is the DNS for the Nimbus caching-proxy instances (146.118.66.104 and 146.118.69.184 )
 
 ## Notes
 
