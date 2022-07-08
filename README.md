@@ -74,9 +74,9 @@ On the caching-proxy instance, run the following:
 
         git clone https://github.com/qcif/cvmfs-setup-galaxy.git
         cd cvmfs-setup-galaxy/
-        sudo ./cvmfs-galaxy-proxy-setup.sh 146.118.64.0/21
+        sudo ./cvmfs-galaxy-proxy-setup.sh 146.118.64.0/21 146.118.114.0/23
 
-        #Note that the proxy CIDR values correspond to all the external public IP addresses on Nimbus
+        #Note that the proxy CIDR values correspond to all the external and internal public IP addresses on Nimbus
 
 ## Setting up the client configuration
 
