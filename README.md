@@ -72,19 +72,22 @@ To do so, create a new security group on the Nimbus dashboard following instruct
 
 On the caching-proxy instance, run the following:
 
-        git clone https://github.com/qcif/cvmfs-setup-galaxy.git
-        cd cvmfs-setup-galaxy/
-        sudo ./cvmfs-galaxy-proxy-setup.sh 146.118.64.0/21
+        git clone https://github.com/cvmfs-on-nimbus.git
+        cd cvmfs-on-nimbus/
+            sudo ./cvmfs-proxy-setup.sh \
+                 --stratum-1 bcws.test.aarnet.edu.au \
+                 --stratum-1 cvmfs1-mel0.gvl.org.au \
+                 --stratum-1 cvmfs1-ufr0.galaxyproject.eu \
+                 --stratum-1 cvmfs1-tacc0.galaxyproject.org \
+                 --stratum-1 cvmfs1-iu0.galaxyproject.org \
+                 --stratum-1 cvmfs1-psu0.galaxyproject.org \
+                 146.118.64.0/21
 
         #Note that the proxy CIDR values correspond to all the external public IP addresses on Nimbus
 
 ## Setting up the client configuration
 
-For the client configuration, any user on Nimbus can run the following code to access data on the Galaxy Australia's repository (/cvmfs/data.galaxyproject.org). This configuration will be pre-installed on a new bio-image for future users/instance creations.
-
-    git clone https://github.com/qcif/cvmfs-setup-galaxy.git
-    cd cvmfs-setup-galaxy/
-    sudo ./cvmfs-galaxy-client-setup.sh cvmfs-cachingproxy.pawsey.org.au
+For the client configuration, see https://github.com/PawseySC/Pawsey-CernVM-FS.git
 
     #Note that cvmfs-cachingproxy.pawsey.org.au is the DNS for the Nimbus caching-proxy instances (146.118.66.104 and 146.118.69.184 )
 
