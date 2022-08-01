@@ -75,6 +75,7 @@ On the caching-proxy instance, run the following:
         git clone https://github.com/cvmfs-on-nimbus.git
         cd cvmfs-on-nimbus/
             sudo ./cvmfs-proxy-setup.sh \
+                 --stratum-1 containers.cvmfs.pawsey.org.au \
                  --stratum-1 bcws.test.aarnet.edu.au \
                  --stratum-1 cvmfs1-mel0.gvl.org.au \
                  --stratum-1 cvmfs1-ufr0.galaxyproject.eu \
