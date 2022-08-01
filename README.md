@@ -90,7 +90,7 @@ On the cvmfs-proxy-3 instance, run:
         git clone https://github.com/cvmfs-on-nimbus.git
         cd cvmfs-on-nimbus/
         sudo ./cvmfs-proxy-setup.sh \
-             --stratum-1 containers.cvmfs.pawsey.org.au \
+             --stratum-1 stratum1-cvmfs.pawsey.org.au \
              146.118.64.0/21
 
         #Note that the proxy CIDR values correspond to all the external public IP addresses on Nimbus
