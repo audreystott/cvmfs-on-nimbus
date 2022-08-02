@@ -103,8 +103,6 @@ On the cvmfs-proxy-3 instance, run:
 
 For the client configuration, see https://github.com/PawseySC/Pawsey-CernVM-FS.git
 
-    #Note that cvmfs-cachingproxy.pawsey.org.au is the DNS for the Nimbus caching-proxy instances (146.118.66.104 and 146.118.69.184 )
-
 ## Notes
 
 - For Stratum 0 only - to delete a repository, use:
