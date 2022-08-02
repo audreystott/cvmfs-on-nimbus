@@ -76,7 +76,7 @@ To do so, create a new security group on the Nimbus dashboard following instruct
 
 On the cvmfs-proxy and cvmfs-proxy-2 instances, run the following:
 
-        git clone https://github.com/cvmfs-on-nimbus.git
+        git clone https://github.com/audreystott/cvmfs-on-nimbus.git
         cd cvmfs-on-nimbus/
             sudo ./cvmfs-proxy-setup.sh \
                  --stratum-1 bcws.test.aarnet.edu.au \
