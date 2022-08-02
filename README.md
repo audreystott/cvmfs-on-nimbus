@@ -39,7 +39,7 @@ B. Follow the steps below for:
 
 ### Creating the repository
 
-    sudo cvmfs_server mkfs cvmfs.pawsey.org.au
+    sudo cvmfs_server mkfs containers.cvmfs.pawsey.org.au
 
     #Note: Root is Ubuntu, therefore owner of repo is Ubuntu
 
@@ -57,7 +57,11 @@ B. Follow the steps below for:
 
 ## Setting up Stratum 1
 
-(To be added)
+    sudo ./cvmfs-stratum-1-setup.sh \
+         --stratum-0 146.118.70.122 \
+        --servername stratum1-cvmfs.pawsey.org.au \
+        --refresh 2 \
+        pubkeys/containers.cvmfs.pawsey.org.au.pub
 
 ## Setting up the caching proxy
 
