@@ -1,34 +1,24 @@
 # Cern-VM FS set-up
 
-This is the documentation for setting up CernVM-FS on Nimbus. 
+Documentation for setting up CernVM-FS on Nimbus. 
 
-*If only required for accessing other Stratum 1s, skip steps A1, A2, B1, B2 and B3.*
+## From the Nimbus Dashboard
 
-A. Create 3 instances on Nimbus dashboard:
+Create 5 instances on the Nimbus dashboard within the same public network:
 
 1. Stratum0 - n3.2c8r with 2 x 80 GB storage volume
 2. Stratum1 - n3.2c8r with 2 x 80 GB storage volume
-3. Caching-proxy - n3.1c4r
+3. Caching proxies - 3 x n3.2c8r
 
-B. Follow the steps below for:
+Create security groups as such:
 
-1. Installing cvmfs and cvmfs-server
-2. Setting up Stratum 0
-3. Setting up Stratum 1
-4. Setting up the caching proxy
-5. Setting up the client configuration
+1. Open port 80 on Stratum 0 for Stratum 1
+2. Open port 80 and 8000 on Stratum 1 for proxies
+3. Open port 3128 on proxies for the CIDR 146.118.64.0/21. Note that the CIDR values correspond to all the external public IP addresses on Nimbus.
 
-## Installing cvmfs and cvmfs-server
+## From the instances
 
-    wget https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest_all.deb
-    sudo dpkg -i cvmfs-release-latest_all.deb
-    rm -f cvmfs-release-latest_all.deb
-    sudo apt-get update
-    sudo apt-get install cvmfs cvmfs-server
-
-## Setting up Stratum 0
-
-### Mounting storage volumes to cvmfs server locations
+### Mounting storage volumes to cvmfs paths for both the Stratum 0 and Stratum 1 
 
     sudo mkfs.ext4 /dev/vdc
     sudo mount /dev/vdc /var/spool/cvmfs
@@ -37,25 +27,42 @@ B. Follow the steps below for:
     sudo mkdir /srv/cvmfs
     sudo mount /dev/vdd /srv/cvmfs
 
-### Creating the repository
+### Setting up Stratum 0
 
-    sudo cvmfs_server mkfs containers.cvmfs.pawsey.org.au
+This example sets up a containers repository, with the name `containers.cvmfs.pawsey.org.au`, keeping in mind that this is not a DNS name. To create more repositories, run the following steps with the repository name required, in the same style and format as the containers one. It is best to be in keeping with `.cvmfs.pawsey.org.au` to ensure uniformity of CernVM-FS repos at Pawsey.
 
-    #Note: Root is Ubuntu, therefore owner of repo is Ubuntu
+#### Running the provided script
 
-### Backing up the masterkey
+This script installs all the required software and sets up the configuration scripts for CernVM-FS. The public key that is generated from this step will need to be copied to the Stratum 1 and proxy servers. For the purpose of this tutorial, the git repo has included the generated public key in the pubkeys folder.
 
-### Enabling write access on repository   
+    git clone https://github.com/audreystott/cvmfs-on-nimbus
+    cd cvmfs-on-nimbus
+    sudo cvmfs_server /cvmfs-stratum-0-setup.sh containers.cvmfs.pawsey.org.au
+    
+The generated public key `containers.cvmfs.pawsey.org.au.pub` can be found in the `/etc/cvmfs/keys` directory:
+
+    > ls /etc/cvmfs/keys/
+    containers.cvmfs.pawsey.org.au.pub
+
+#### Enabling write access on repository   
 
     sudo cvmfs_server transaction
 
-### Installing software on repository
+#### Installing software on repository
 
-### Publishing the repository
+Proceed to install any software or copy files into this repository.
+
+#### Publishing the repository
+
+Run the publish command to make the changes permanent, this also ensures changes can't happen until the transaction command is run again as above.
 
     sudo cvmfs_server publish
 
-## Setting up Stratum 1
+### Setting up Stratum 1
+
+Now that the Stratum 0 repository has been set up, the replica can be configured as below, keeping in mind that the public key was copied from the Stratum 0 server into the pubkeys folder here.
+
+#### Running the provided script
 
     sudo ./cvmfs-stratum-1-setup.sh \
          --stratum-0 146.118.70.122 \
@@ -63,50 +70,36 @@ B. Follow the steps below for:
         --refresh 2 \
         pubkeys/containers.cvmfs.pawsey.org.au.pub
 
-## Setting up the caching proxy
+### Setting up the caching proxy
 
-The caching proxy needs to have a security group with port 3218 opened to all IP addresses on the external network on Nimbus. This is so that the instances on these IP addresses can access data on CernVM-FS repositories.
+The proxies will also include repositories from AARNet and the Galaxy Project.
 
-To do so, create a new security group on the Nimbus dashboard following instructions for how to on this [page](https://support.pawsey.org.au/documentation/display/US/Allow+HTTPS+Access+To+Your+Instance#space-menu-link-content). Under the new security group, create a new rule that has the following settings:
+On the proxy instances, run the following:
 
-- Rule: Custom TCP Rule
-- Direction: Ingress
-- Port: 3128
-- Remote - CIDR: 0.0.0/0
-
-On the cvmfs-proxy and cvmfs-proxy-2 instances, run the following:
-
-        git clone https://github.com/audreystott/cvmfs-on-nimbus.git
-        cd cvmfs-on-nimbus/
-            sudo ./cvmfs-proxy-setup.sh \
-                 --stratum-1 bcws.test.aarnet.edu.au \
-                 --stratum-1 cvmfs1-mel0.gvl.org.au \
-                 --stratum-1 cvmfs1-ufr0.galaxyproject.eu \
-                 --stratum-1 cvmfs1-tacc0.galaxyproject.org \
-                 --stratum-1 cvmfs1-iu0.galaxyproject.org \
-                 --stratum-1 cvmfs1-psu0.galaxyproject.org \
-                 146.118.64.0/21
-
-        #Note that the proxy CIDR values correspond to all the external public IP addresses on Nimbus
-
-On the cvmfs-proxy-3 instance, run:
-
-        git clone https://github.com/cvmfs-on-nimbus.git
-        cd cvmfs-on-nimbus/
         sudo ./cvmfs-proxy-setup.sh \
              --stratum-1 stratum1-cvmfs.pawsey.org.au \
+             --stratum-1 bcws.test.aarnet.edu.au \
+             --stratum-1 cvmfs1-mel0.gvl.org.au \
+             --stratum-1 cvmfs1-ufr0.galaxyproject.eu \
+             --stratum-1 cvmfs1-tacc0.galaxyproject.org \
+             --stratum-1 cvmfs1-iu0.galaxyproject.org \
+             --stratum-1 cvmfs1-psu0.galaxyproject.org \
              146.118.64.0/21
 
         #Note that the proxy CIDR values correspond to all the external public IP addresses on Nimbus
 
-## Setting up the client configuration
+### Setting up the client configuration
 
 For the client configuration, see https://github.com/PawseySC/Pawsey-CernVM-FS.git
 
 ## Notes
 
-- For Stratum 0 only - to delete a repository, use:
+For Stratum 0 only - to delete a repository, use:
     
-      sudo cvmfs_server rmfs my.repo.name
+    sudo cvmfs_server rmfs my.repo.name
 
-- For more information on CernVM-FS, see here: https://cvmfs.readthedocs.io/en/stable/index.html
+For more information on CernVM-FS, see here: https://cvmfs.readthedocs.io/en/stable/index.html
+
+## Acknowledgements
+
+The setup scripts have been kindly provided to us by QCIF. See here for more: [CernVM-FS setup](https://github.com/qcif/cvmfs-setup-example)
