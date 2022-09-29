@@ -65,7 +65,7 @@ Now that the Stratum 0 repository has been set up, the replica can be configured
 #### Running the provided script
 
     sudo ./cvmfs-stratum-1-setup.sh \
-         --stratum-0 146.118.70.122 \
+         --stratum-0 stratum0-cvmfs.pawsey.org.au \
         --servername stratum1-cvmfs.pawsey.org.au \
         --refresh 2 \
         pubkeys/containers.cvmfs.pawsey.org.au.pub
