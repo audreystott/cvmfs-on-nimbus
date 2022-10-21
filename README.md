@@ -29,7 +29,7 @@ Create security groups as such:
 
 ### Setting up Stratum 0
 
-This example sets up a containers repository, with the name `containers.cvmfs.pawsey.org.au`, keeping in mind that this is not a DNS name. To create more repositories, run the following steps with the repository name required, in the same style and format as the containers one. It is best to be in keeping with `.cvmfs.pawsey.org.au` to ensure uniformity of CernVM-FS repos at Pawsey.
+This example sets up a containers repository, with the name `containers.pawsey.org.au`, keeping in mind that this is not a DNS name. To create more repositories, run the following steps with the repository name required, in the same style and format as the containers one. It is best to be in keeping with `pawsey.org.au` to ensure uniformity of CernVM-FS repos at Pawsey.
 
 #### Running the provided script
 
@@ -39,7 +39,7 @@ This script installs all the required software and sets up the configuration scr
     cd cvmfs-on-nimbus
     sudo cvmfs_server /cvmfs-stratum-0-setup.sh containers.pawsey.org.au
     
-The generated public key `containers.cvmfs.pawsey.org.au.pub` can be found in the `/etc/cvmfs/keys` directory:
+The generated public key `containers.pawsey.org.au.pub` can be found in the `/etc/cvmfs/keys` directory:
 
     > ls /etc/cvmfs/keys/
     containers.pawsey.org.au.pub
