@@ -37,12 +37,12 @@ This script installs all the required software and sets up the configuration scr
 
     git clone https://github.com/audreystott/cvmfs-on-nimbus
     cd cvmfs-on-nimbus
-    sudo cvmfs_server /cvmfs-stratum-0-setup.sh containers.cvmfs.pawsey.org.au
+    sudo cvmfs_server /cvmfs-stratum-0-setup.sh containers.pawsey.org.au
     
 The generated public key `containers.cvmfs.pawsey.org.au.pub` can be found in the `/etc/cvmfs/keys` directory:
 
     > ls /etc/cvmfs/keys/
-    containers.cvmfs.pawsey.org.au.pub
+    containers.pawsey.org.au.pub
 
 #### Enabling write access on repository   
 
@@ -50,12 +50,15 @@ The generated public key `containers.cvmfs.pawsey.org.au.pub` can be found in th
 
 #### Installing software on repository
 
+    cd /cvmfs/containers.pawsey.org.au
+
 Proceed to install any software or copy files into this repository.
 
 #### Publishing the repository
 
 Run the publish command to make the changes permanent, this also ensures changes can't happen until the transaction command is run again as above.
 
+    cd $HOME
     sudo cvmfs_server publish
 
 ### Setting up Stratum 1
@@ -68,7 +71,7 @@ Now that the Stratum 0 repository has been set up, the replica can be configured
          --stratum-0 stratum0-cvmfs.pawsey.org.au \
         --servername stratum1-cvmfs.pawsey.org.au \
         --refresh 2 \
-        pubkeys/containers.cvmfs.pawsey.org.au.pub
+        pubkeys/containers.pawsey.org.au.pub
 
 ### Setting up the caching proxy
 
