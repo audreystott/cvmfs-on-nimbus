@@ -30,7 +30,7 @@
 #================================================================
 
 PROGRAM='cvmfs-proxy-setup'
-VERSION='1.5.0'
+VERSION='1.5.2'
 
 EXE=$(basename "$0" .sh)
 EXE_EXT=$(basename "$0")
@@ -94,6 +94,10 @@ do
     -1|--s1|--stratum1|--stratum-1)
       if [ $# -lt 2 ]; then
         echo "$EXE: usage error: $1 missing value" >&2
+        exit 2
+      fi
+      if [ -z "$2" ]; then
+        echo "$EXE: stratum 1 host cannot be an empty string" >&2
         exit 2
       fi
       STRATUM_ONE_HOSTS="$STRATUM_ONE_HOSTS $2"
@@ -282,7 +286,9 @@ case "$DISTRO" in
     | 'CentOS Stream release 9' \
     | 'Rocky Linux release 8.5 (Green Obsidian)' \
     | 'Rocky Linux release 8.6 (Green Obsidian)' \
+    | 'Rocky Linux release 8.7 (Green Obsidian)' \
     | 'Rocky Linux release 9.0 (Blue Onyx)' \
+    | 'Ubuntu 22.04' \
     | 'Ubuntu 21.04' \
     | 'Ubuntu 20.04' \
     | 'Ubuntu 20.10' )
@@ -448,7 +454,7 @@ _dpkg_download_and_install() {
 
   else
     if [ -z "$QUIET" ]; then
-      echo "$EXE: repository already installed: $REPO_NAME"
+      echo "$EXE: package already installed: $PKG_NAME"
     fi
   fi
 }
